@@ -1,0 +1,213 @@
+/* ==========================================================================
+   BELIEVE AI LABS - HERO STYLES
+   Loaded via: import "./App.css" in App.jsx
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 68%, rgba(85, 140, 190, 0.16) 0%, rgba(35, 75, 115, 0.08) 32%, transparent 60%), #030507;
+  color: #ffffff;
+}
+
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(circle at 50% 50%, transparent 30%, rgba(0,0,0,0.18) 68%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   HORIZON RIM GLOW + SUN FLARE
+   A dramatic lit ring arc + bright flare laid over the photo, independent
+   of the photo's own content. The arc is an SVG ellipse stroke (gradient +
+   layered blur, defined inline in Hero.jsx) so it can carry a lengthwise
+   brightness gradient and a sense of physical thickness — a flat CSS
+   border can only ever be a uniform hairline. This div-shaped positioning
+   box is unchanged from the old technique: draw the FULL ellipse and let
+   the hero's overflow:hidden crop away the invisible lower portion, so only
+   the top cap shows. Both glow + flare are positioned from the container's
+   BOTTOM edge so the flare stays locked to a point on the arc across
+   breakpoints without recalculating.
+   ========================================================================== */
+.hero-horizon-glow {
+  position: absolute;
+  z-index: 3;
+  left: calc(50% - min(750px, 60vw));
+  bottom: -420px;
+  width: min(1500px, 120vw);
+  height: 700px;
+  overflow: visible;
+  pointer-events: none;
+  filter: drop-shadow(0 0 18px rgba(90, 160, 240, 0.28)) drop-shadow(0 0 45px rgba(50, 120, 210, 0.15));
+}
+
+/* --flare-size/--flare-peak/--flare-offset-x drive size + position, so the
+   spike's visual center always lands ON the horizon-glow arc, offset to one
+   side rather than sitting at its dead-center peak.
+   left/bottom use calc() offsets rather than transform:translate(-50%,50%)
+   for centering — GSAP takes over the transform property for this element
+   (scale + scroll parallax), so a CSS transform here would get overwritten */
+.hero-sun-flare {
+  --flare-size: clamp(48px, 5.5vw, 88px);
+  --flare-peak: 248px;
+  --flare-offset-x: 315px;
+  position: absolute;
+  z-index: 4;
+  width: var(--flare-size);
+  height: var(--flare-size);
+  left: calc(50% - (var(--flare-size) / 2) + var(--flare-offset-x));
+  bottom: calc(var(--flare-peak) - (var(--flare-size) / 2));
+  overflow: visible;
+  pointer-events: none;
+  filter:
+    drop-shadow(0 0 10px rgba(255, 255, 255, 0.85))
+    drop-shadow(0 0 34px rgba(170, 210, 255, 0.55))
+    drop-shadow(0 0 80px rgba(110, 170, 240, 0.3));
+}
+
+/* CENTER LOGO - uses margin:auto NOT transform, so GSAP y/scale won't break centering */
+.hero-center {
+  position: absolute;
+  z-index: 20;
+  top: 18%;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  margin: 0 auto;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+}
+
+/* SIDE STATEMENTS */
+.hero-statement {
+  position: absolute;
+  z-index: 20;
+  top: 50%;
+  font-family: 'Space Grotesk', Arial, Helvetica, sans-serif;
+  font-size: 11.5px;
+  line-height: 2.05;
+  letter-spacing: 0.2em;
+  font-weight: 450;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* Lines reveal individually (staggered by GSAP in App.jsx), not as one block */
+.hero-statement p,
+.hero-statement .hero-accent-line {
+  opacity: 0;
+}
+
+.hero-left {
+  left: 4.5%;
+  width: 290px;
+}
+
+.hero-right {
+  right: 4.5%;
+  width: 175px;
+  padding-left: 22px;
+  border-left: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.hero-statement p {
+  margin: 0;
+  padding: 0;
+}
+
+.hero-accent-line {
+  width: 40px;
+  height: 1px;
+  margin-top: 16px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+/* SCROLL INDICATOR - uses margin:auto NOT transform, GSAP compatible */
+.hero-scroll {
+  position: absolute;
+  z-index: 50;
+  bottom: 28px;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  color: rgba(255, 255, 255, 0.72);
+  opacity: 0;
+}
+
+.scroll-line {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.75);
+  animation: scrollPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%   { height: 18px; opacity: 0.35; }
+  50%  { height: 48px; opacity: 0.95; }
+  100% { height: 18px; opacity: 0.35; }
+}
+
+/* TABLET (max 900px) */
+@media (max-width: 900px) {
+  .hero-statement { font-size: 10px; letter-spacing: 0.13em; }
+  .hero-left { left: 5%; width: 210px; }
+  .hero-right { right: 5%; width: 120px; padding-left: 14px; }
+  .hero-horizon-glow {
+    left: calc(50% - min(550px, 55vw));
+    width: min(1100px, 110vw);
+    height: 560px;
+    bottom: -320px;
+  }
+  .hero-sun-flare {
+    --flare-size: clamp(36px, 6vw, 60px);
+    --flare-peak: 214px;
+    --flare-offset-x: clamp(90px, 24vw, 231px);
+  }
+}
+
+/* MOBILE (max 640px) */
+@media (max-width: 640px) {
+  .hero { height: auto; min-height: 100svh; padding-bottom: 60px; }
+  .hero-center { top: 90px; opacity: 1 !important; }
+  .hero-statement {
+    position: relative;
+    top: auto; left: auto; right: auto;
+    width: 100%;
+    padding: 0 6vw;
+    font-size: 9px;
+    letter-spacing: 0.11em;
+    opacity: 1 !important;
+    border-left: none;
+  }
+  .hero-statement p,
+  .hero-statement .hero-accent-line {
+    opacity: 1 !important;
+  }
+  .hero-left { margin-top: 300px; }
+  .hero-right { margin-top: 16px; padding-left: 6vw; border-left: 1px solid rgba(255,255,255,0.3); }
+  .hero-horizon-glow {
+    left: calc(50% - min(340px, 50vw));
+    width: min(680px, 100vw);
+    height: 400px;
+    bottom: -200px;
+  }
+  .hero-sun-flare {
+    --flare-size: 32px;
+    --flare-peak: 182px;
+    --flare-offset-x: clamp(50px, 20vw, 90px);
+  }
+  .hero-scroll { position: relative; bottom: auto; margin: 28px auto; opacity: 1 !important; }
+}

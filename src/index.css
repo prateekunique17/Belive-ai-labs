@@ -1,0 +1,319 @@
+/* ==========================================================================
+   BELIEVE AI LABS — CORE STYLES
+   Preloader + Navbar + Hero only
+   ========================================================================== */
+
+:root {
+  --bg-primary: #101014;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --text-primary: #f5f5f7;
+  --text-secondary: #9a9da6;
+  --text-muted: #6b6e77;
+  --font-main: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Metallic/chrome sheen used on the BELIEVE wordmark everywhere it appears */
+  --logo-metal-gradient: linear-gradient(180deg, #ffffff 0%, #e7e9ed 28%, #b9bfc8 55%, #71767f 80%, #3c3f46 100%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.believe-app-root,
+.site-main {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   BRAND LOGO (B ≡ L I ≡ V ≡)
+   ========================================================================== */
+
+.believe-brand-logo {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+}
+
+.brand-wordmark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-wordmark-img {
+  display: block;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Small logo (navbar / footer) */
+.logo-small .brand-wordmark-img {
+  width: 124px;
+}
+
+.logo-small .brand-subtitle {
+  font-size: 7px;
+  letter-spacing: 0.6em;
+  margin-left: 0.6em;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+/* Large logo (preloader, hero) */
+.logo-large .brand-wordmark-img {
+  width: clamp(280px, 58vw, 820px);
+}
+
+.logo-large .brand-subtitle {
+  font-size: clamp(12px, 1.8vw, 24px);
+  letter-spacing: 0.85em;
+  margin-left: 0.85em;
+  color: var(--text-secondary);
+  margin-top: clamp(14px, 2.5vw, 32px);
+  font-weight: 300;
+}
+
+/* ==========================================================================
+   PRELOADER
+   ========================================================================== */
+
+.preloader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background-color: #101014;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.preloader-content {
+  width: 85%;
+  max-width: 800px;
+  text-align: center;
+}
+
+.preloader-name {
+  display: flex;
+  justify-content: center;
+}
+
+.preloader-line {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.75);
+  margin: 32px auto 22px;
+  transform: scaleX(0);
+}
+
+.preloader-tagline {
+  font-size: 11px;
+  letter-spacing: 0.45em;
+  color: var(--text-secondary);
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   NAVBAR
+   ========================================================================== */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 28px 4vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  transition: background-color 0.4s ease, padding 0.4s ease,
+              backdrop-filter 0.4s ease, border-color 0.4s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.navbar-hero-top {
+  background: transparent;
+  border-bottom: 1px solid transparent;
+}
+
+.navbar-scrolled {
+  background: rgba(16, 16, 20, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 16px 4vw;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Brand hidden at top (since hero image already shows it), shown on scroll */
+.brand-at-top {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.navbar-scrolled .brand-at-top {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.navbar-brand-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-link.active {
+  color: #ffffff;
+}
+
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #ffffff;
+}
+
+/* JOIN US button */
+.join-btn {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  padding: 8px 24px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s ease, border-color 0.4s ease;
+  background: transparent;
+}
+
+.join-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  transform: translateX(-101%);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 0;
+}
+
+.join-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+.join-btn:hover {
+  color: #101014;
+  border-color: #ffffff;
+}
+
+.join-btn:hover::before {
+  transform: translateX(0);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .navbar-nav {
+    gap: 20px;
+  }
+
+  .nav-link {
+    font-size: 9px;
+  }
+
+  .join-btn {
+    padding: 7px 16px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 20px 5vw;
+  }
+
+  .navbar-nav {
+    gap: 14px;
+  }
+
+  .join-btn {
+    display: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
