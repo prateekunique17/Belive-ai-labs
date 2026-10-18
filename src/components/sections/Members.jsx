@@ -132,7 +132,7 @@ const MEMBERS_DATA = [
     quote: "“True conviction is not about predicting the future, but having the resolve to build it.”",
     image: "/images/members/prateek-kumar.jpeg",
     linkedin: "https://www.linkedin.com/in/prateekunique17/",
-    github: "",
+    github: "https://github.com/prateekunique17",
   },
   {
     id: "dhruv-gaur",
@@ -169,8 +169,8 @@ const MEMBERS_DATA = [
     ],
     quote: "“Great products bridge the invisible line between complex algorithms and effortless human utility.”",
     image: "/images/members/anshul-sharma.jpeg",
-    linkedin: "",
-    github: "",
+    linkedin: "https://www.linkedin.com/in/anshulsharmabeaiml/",
+    github: "https://github.com/lolupgo",
   },
   {
     id: "tanmay",
@@ -189,7 +189,7 @@ const MEMBERS_DATA = [
     quote: "“Pushing boundaries requires questioning the assumptions everyone else takes for granted.”",
     image: "/images/members/tanmay.jpeg",
     linkedin: "https://www.linkedin.com/in/tanmay-arora-3220b0366/",
-    github: "",
+    github: "https://github.com/Tanmay-Arora19",
   },
 ];
 

@@ -81,7 +81,7 @@
   margin: 0 auto;
   text-align: center;
   white-space: nowrap;
-  opacity: 0;
+  opacity: 1;
 }
 
 /* SIDE STATEMENTS */
@@ -97,12 +97,13 @@
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.88);
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+  opacity: 1;
 }
 
-/* Lines reveal individually (staggered by GSAP in App.jsx), not as one block */
+/* Lines reveal immediately with the page */
 .hero-statement p,
 .hero-statement .hero-accent-line {
-  opacity: 0;
+  opacity: 1;
 }
 
 .hero-left {

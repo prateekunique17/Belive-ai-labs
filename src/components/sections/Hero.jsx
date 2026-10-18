@@ -1,4 +1,4 @@
-import BelieveLogo from "./BelieveLogo";
+import BelieveLogo from "../common/BelieveLogo";
 
 export default function Hero() {
   return (

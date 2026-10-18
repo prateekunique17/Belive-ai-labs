@@ -17,39 +17,72 @@ function FileDocIcon() {
 }
 
 /**
- * Isolated Application Submission Handler
- *
- * NOTE FOR BACKEND INTEGRATION:
- * To connect a live backend endpoint, define VITE_APPLY_API_ENDPOINT in your environment (e.g. .env)
- * or update the fetch call below with your actual API route.
+ * Upload the resume file to Cloudinary permanent storage, then deliver
+ * the candidate details + resume download URL straight to your email via Web3Forms.
  */
-async function submitApplication({ fullName, email, resume }) {
-  const endpoint = import.meta.env.VITE_APPLY_API_ENDPOINT;
+async function uploadResumeFile(file) {
+  const cloudName =
+    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "db1tse96";
+  const uploadPreset =
+    import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "BelieveAiLabs";
 
-  if (endpoint) {
-    const formData = new FormData();
-    formData.append("fullName", fullName);
-    formData.append("email", email);
-    formData.append("resume", resume);
+  const uploadData = new FormData();
+  uploadData.append("file", file);
+  uploadData.append("upload_preset", uploadPreset);
 
-    const response = await fetch(endpoint, {
+  // Use resource_type "raw" so PDFs/DOCs are treated as direct downloadable documents
+  // avoiding Cloudinary image-delivery ACL blocks
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`,
+    {
       method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Server returned error: ${response.status} ${response.statusText}`
-      );
+      body: uploadData,
     }
+  );
 
-    return { success: true, live: true };
+  const json = await res.json();
+  if (!res.ok || !json.secure_url) {
+    throw new Error(
+      json.error?.message || "Failed to upload resume file. Please verify upload preset."
+    );
   }
 
-  // When no backend endpoint is configured:
-  // Simulate processing delay for UI demonstration, then return unconfigured notice
-  await new Promise((resolve) => setTimeout(resolve, 600));
-  return { success: true, live: false };
+  return json.secure_url;
+}
+
+async function submitApplication({ fullName, email, resumeFile }) {
+  const accessKey =
+    import.meta.env.VITE_WEB3FORMS_ACCESS_KEY ||
+    "3d1f3e85-8c83-4113-bc2a-348e4bbfee6c";
+
+  // Step 1: Upload the candidate's attached file
+  const resumeDownloadUrl = await uploadResumeFile(resumeFile);
+
+  // Step 2: Send email to you via Web3Forms with candidate details + file link
+  const formData = new FormData();
+  formData.append("access_key", accessKey);
+  formData.append("from_name", "Believe AI Labs Careers");
+  formData.append("subject", `New Job Application with Resume: ${fullName}`);
+  formData.append("name", fullName);
+  formData.append("email", email);
+  formData.append("resume_filename", resumeFile.name);
+  formData.append("resume_download_link", resumeDownloadUrl);
+  formData.append(
+    "message",
+    `Candidate ${fullName} (${email}) submitted their resume: ${resumeFile.name}\n\nDownload / View Resume: ${resumeDownloadUrl}`
+  );
+
+  const response = await fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+  if (!data.success) {
+    throw new Error(data.message || "Failed to submit application");
+  }
+
+  return { success: true, live: true };
 }
 
 export default function JoinUs() {
@@ -65,7 +98,7 @@ export default function JoinUs() {
 
   // File validator (PDF, DOC, DOCX up to 10MB)
   const validateFile = (selectedFile) => {
-    if (!selectedFile) return "Resume / CV is required.";
+    if (!selectedFile) return "Resume / CV file is required.";
     const validExtensions = [".pdf", ".doc", ".docx"];
     const fileName = selectedFile.name.toLowerCase();
     const hasValidExt = validExtensions.some((ext) => fileName.endsWith(ext));
@@ -156,7 +189,7 @@ export default function JoinUs() {
       newErrors.email = "Please enter a valid email address.";
     }
 
-    // Validate Resume
+    // Validate Resume file
     const fileError = validateFile(file);
     if (fileError) {
       newErrors.resume = fileError;
@@ -174,7 +207,7 @@ export default function JoinUs() {
       const result = await submitApplication({
         fullName: fullName.trim(),
         email: email.trim(),
-        resume: file,
+        resumeFile: file,
       });
 
       setIsLiveBackend(result.live);
@@ -182,7 +215,7 @@ export default function JoinUs() {
     } catch (err) {
       setStatus("error");
       setErrors({
-        form: err.message || "An error occurred while submitting. Please try again.",
+        form: err.message || "An error occurred while uploading. Please try again.",
       });
     }
   };
@@ -234,15 +267,10 @@ export default function JoinUs() {
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
-            <h3 className="join-status-heading">
-              {isLiveBackend
-                ? "Application Submitted"
-                : "Application Validated"}
-            </h3>
+            <h3 className="join-status-heading">Application Submitted</h3>
             <p className="join-status-copy">
-              {isLiveBackend
-                ? "Thank you for applying to Believe AI Labs. Our admissions committee will review your application and reach out via email."
-                : "Your application fields and resume passed all client-side validation requirements. (Notice: A backend submission endpoint is not yet connected to this project, so no documents were transmitted)."}
+              Thank you for applying to Believe AI Labs. Our admissions committee
+              will review your application and reach out via email.
             </p>
             <button
               type="button"
@@ -332,7 +360,7 @@ export default function JoinUs() {
               )}
             </div>
 
-            {/* Field 3: Resume / CV */}
+            {/* Field 3: Resume / CV File Upload */}
             <div className="join-form-group">
               <label htmlFor="join-resume-input" className="join-form-label">
                 RESUME / CV (PDF OR DOC) <span className="join-asterisk">*</span>

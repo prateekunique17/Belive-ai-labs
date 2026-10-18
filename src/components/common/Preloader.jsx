@@ -27,32 +27,32 @@ export default function Preloader({ onComplete }) {
     tl.to(nameRef.current, {
       opacity: 1,
       y: 0,
-      duration: 0.8,
+      duration: 0.65,
       ease: "power3.out",
     })
-      // 3. After 1.5 seconds, a thin horizontal line draws left to right beneath the name
+      // 3. Horizontal line draws left to right beneath the name (slight pause tuned from 1.5s -> 0.9s)
       .to(
         lineRef.current,
         {
           scaleX: 1,
-          duration: 0.9,
+          duration: 0.75,
           ease: "power2.inOut",
         },
-        "+=1.5"
+        "+=0.9"
       )
-      // 4. Then a short tagline fades in below
+      // 4. Then tagline fades in below
       .to(taglineRef.current, {
         opacity: 1,
         y: 0,
-        duration: 0.6,
+        duration: 0.5,
         ease: "power2.out",
       })
-      // Small pause to take in the branding
-      .to({}, { duration: 0.4 })
-      // 5. Then the black screen does a curtain wipe upward to reveal the page
+      // Brief pause to take in the branding (tuned from 0.4s -> 0.25s)
+      .to({}, { duration: 0.25 })
+      // 5. Black curtain wipes upward to reveal the page (tuned from 1.1s -> 0.85s)
       .to(loaderRef.current, {
         yPercent: -100,
-        duration: 1.1,
+        duration: 0.85,
         ease: "power4.inOut",
       });
 

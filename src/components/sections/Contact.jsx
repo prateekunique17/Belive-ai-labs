@@ -4,25 +4,32 @@ import { useState } from "react";
  * Contact Section — Believe AI Labs
  *
  * Backend integration:
- *   Set VITE_CONTACT_API_ENDPOINT in your .env file to wire up a real endpoint.
- *   Without it the form validates fully on the client but does NOT transmit data.
+ *   Submits directly to Web3Forms using VITE_WEB3FORMS_ACCESS_KEY.
  */
 async function submitContactForm({ name, email, message }) {
-  const endpoint = import.meta.env.VITE_CONTACT_API_ENDPOINT;
+  const accessKey =
+    import.meta.env.VITE_WEB3FORMS_ACCESS_KEY ||
+    "3d1f3e85-8c83-4113-bc2a-348e4bbfee6c";
 
-  if (endpoint) {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, message }),
-    });
-    if (!res.ok) throw new Error(`Server error ${res.status}`);
-    return { live: true };
+  const formData = new FormData();
+  formData.append("access_key", accessKey);
+  formData.append("from_name", "Believe AI Labs Website");
+  formData.append("subject", `New Inquiry from ${name} — Let's Connect`);
+  formData.append("name", name);
+  formData.append("email", email);
+  formData.append("message", message);
+
+  const res = await fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+  if (!data.success) {
+    throw new Error(data.message || `Server error ${res.status}`);
   }
 
-  // Simulate latency; no data is actually sent
-  await new Promise((r) => setTimeout(r, 700));
-  return { live: false };
+  return { live: true };
 }
 
 export default function Contact() {
@@ -103,13 +110,9 @@ export default function Contact() {
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
-                <h3 className="contact-success-heading">
-                  {isLive ? "Message Sent" : "Message Validated"}
-                </h3>
+                <h3 className="contact-success-heading">Message Sent</h3>
                 <p className="contact-success-copy">
-                  {isLive
-                    ? "Thank you for reaching out. We'll get back to you soon."
-                    : "Your message passed all validations. (Note: a backend endpoint isn't configured yet, so your message was not transmitted.)"}
+                  Thank you for reaching out. We&rsquo;ll get back to you soon.
                 </p>
                 <button type="button" className="contact-reset-btn" onClick={handleReset}>
                   Send Another Message

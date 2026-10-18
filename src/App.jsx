@@ -2,25 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import "./App.css";
-import "./components/Sections.css";
+import "./styles/App.css";
+import "./styles/Sections.css";
 
-import Preloader from "./components/Preloader";
-import Hero from "./components/Hero";
-import Purpose from "./components/Purpose";
-import Principles from "./components/Principles";
-import Members from "./components/Members";
-import BeliefVision from "./components/BeliefVision";
-import JoinUs from "./components/JoinUs";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
-
-
+import { Preloader, Footer, TermsModal } from "./components/common";
+import { HomePage } from "./pages";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
   const appRef = useRef(null);
 
   // Prevent browser from restoring scroll position in the middle of page on reload
@@ -60,96 +52,12 @@ function App() {
 
     const ctx = gsap.context(() => {
       /* =========================================
-         HERO CENTER LOGO
+         HERO ELEMENTS — immediate clean presentation
       ========================================= */
-
-      gsap.fromTo(
-        ".hero-center",
-        {
-          opacity: 0,
-          y: 35,
-          scale: 0.96,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1.2,
-          delay: 0.2,
-          ease: "power3.out",
-        }
-      );
-
-
-      /* =========================================
-         LEFT STATEMENT — lines reveal one by one
-      ========================================= */
-
-      gsap.fromTo(
-        ".hero-left > *",
-        {
-          opacity: 0,
-          x: -14,
-          y: 8,
-        },
-        {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          duration: 0.7,
-          delay: 0.5,
-          stagger: 0.12,
-          ease: "power2.out",
-        }
-      );
-
-
-      /* =========================================
-         RIGHT STATEMENT — lines reveal one by one
-      ========================================= */
-
-      gsap.fromTo(
-        ".hero-right > *",
-        {
-          opacity: 0,
-          x: 14,
-          y: 8,
-        },
-        {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          duration: 0.7,
-          delay: 0.65,
-          stagger: 0.12,
-          ease: "power2.out",
-        }
-      );
-
-
-      /* =========================================
-         HORIZON RIM GLOW + SUN FLARE ENTRANCE
-      ========================================= */
-
-      gsap.fromTo(
-        [".hero-horizon-glow", ".hero-sun-flare"],
-        {
-          opacity: 0,
-          scale: 0.9,
-        },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 1.8,
-          delay: 0.35,
-          ease: "power3.out",
-        }
-      );
 
       gsap.to([".hero-horizon-glow", ".hero-sun-flare"], {
         yPercent: 8,
         ease: "none",
-
         scrollTrigger: {
           trigger: ".hero",
           start: "top top",
@@ -321,22 +229,13 @@ function App() {
         />
       )}
 
-      <main
-        ref={appRef}
-        id="top"
-        className="site-main"
-      >
-        <Hero />
-        <Purpose />
-        <Principles />
-        <Members />
-        <BeliefVision />
-        <JoinUs />
-        <Contact />
+      <HomePage appRef={appRef} />
+      <Footer onOpenTerms={() => setIsTermsOpen(true)} />
 
-      </main>
-
-      <Footer />
+      <TermsModal
+        isOpen={isTermsOpen}
+        onClose={() => setIsTermsOpen(false)}
+      />
 
     </div>
   );

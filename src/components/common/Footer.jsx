@@ -22,7 +22,7 @@ function LinkedInIcon() {
   );
 }
 
-export default function Footer() {
+export default function Footer({ onOpenTerms }) {
   return (
     <footer className="site-footer" role="contentinfo">
       <div className="footer-inner">
@@ -49,6 +49,13 @@ export default function Footer() {
               {link.label}
             </a>
           ))}
+          <button
+            type="button"
+            className="footer-nav-link footer-terms-btn"
+            onClick={onOpenTerms}
+          >
+            TERMS &amp; CONDITIONS
+          </button>
         </nav>
 
         {/* ── RIGHT: LinkedIn + Copyright ── */}
@@ -73,9 +80,18 @@ export default function Footer() {
             </span>
           )}
 
-          <p className="footer-copyright">
-            © 2026 Believe AI Labs.<br />All rights reserved.
-          </p>
+          <div className="footer-copyright-group">
+            <p className="footer-copyright">
+              © 2026 Believe AI Labs.<br />All rights reserved.
+            </p>
+            <button
+              type="button"
+              className="footer-terms-sublink"
+              onClick={onOpenTerms}
+            >
+              Terms of Membership
+            </button>
+          </div>
         </div>
 
       </div>
